@@ -20,24 +20,19 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "schedule_lessons",
-            joinColumns = @JoinColumn(name = "schedule_id"),
-            inverseJoinColumns = @JoinColumn(name = "lesson_id")
-    )
-    private List<Lesson> lesson;
-
-    @ManyToOne
-    private Coach coach;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User user;
-
     @Column(name = "date")
     private Date date;
 
     @Column(name = "startTime")
     private Time startTime;
+
+    @Column(name = "duration")
+    private Time duration;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Lesson> lesson;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

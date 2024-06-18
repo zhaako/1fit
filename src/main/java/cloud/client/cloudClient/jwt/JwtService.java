@@ -25,6 +25,9 @@ public class JwtService {
     public String extractName(String token){
         return extractClaim(token, claims -> claims.get("name", String.class));
     }
+    public Long extractId(String token){
+        return extractClaim(token, claims -> claims.get("id", Long.class));
+    }
 
 
     public <T> T extractClaim(String token, Function<Claims, T> claimResolver){
@@ -51,6 +54,7 @@ public class JwtService {
                 .claim("iat", now)
                 .claim("name", userDetails.getName())
                 .claim("exp", expiryDate)
+                .claim("id", userDetails.getId())
                 .signWith(getSignIngKey())
                 .compact();
     }

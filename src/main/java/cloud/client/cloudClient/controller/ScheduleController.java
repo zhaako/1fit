@@ -1,9 +1,18 @@
 package cloud.client.cloudClient.controller;
 
+import cloud.client.cloudClient.jwt.JwtService;
+import cloud.client.cloudClient.model.Lesson;
 import cloud.client.cloudClient.model.Schedule;
+import cloud.client.cloudClient.model.User;
+import cloud.client.cloudClient.model.dto.ScheduleDto;
+import cloud.client.cloudClient.service.LessonService;
 import cloud.client.cloudClient.service.ScheduleService;
+import cloud.client.cloudClient.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,15 +22,30 @@ import java.util.List;
 public class ScheduleController {
     @Autowired
     private ScheduleService scheduleService;
+    @Autowired
+    private LessonService lessonService;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping
-    public Schedule createSchedule(@RequestBody Schedule schedule) {
-        return scheduleService.createSchedule(schedule);
+    public ResponseEntity<Schedule> createSchedule(@RequestBody Schedule schedule) {
+        try {
+            Schedule savedSchedule = scheduleService.createSchedule(schedule);
+            return new ResponseEntity<>(savedSchedule, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping
     public List<Schedule> getAllSchedules() {
         return scheduleService.getSchedules();
+    }
+    @GetMapping("/all")
+    public List<ScheduleDto> getAllScheduleDTO(){
+        return scheduleService.getAllSchedule();
     }
 
     @PutMapping("/{id}")
@@ -40,5 +64,13 @@ public class ScheduleController {
     public List<Schedule> getSchedulesByUserId(@PathVariable Long userId) {
         return scheduleService.getSchedulesByUserId(userId);
     }
+    @PostMapping("/addLesson/{id}")
+    public Schedule addLesson(@PathVariable Long id, @RequestBody Schedule schedule, @AuthenticationPrincipal User userDetails){
+        Long userId = jwtService.extractId(jwtService.generateToken(userDetails));
+        User user = userService.findUser(userId);
+        Lesson lesson = lessonService.findLesson(id);
+        schedule.setUser(user);
+        schedule.setLesson(List.of(lesson));
+        return scheduleService.createSchedule(schedule);
+    }
 }
-

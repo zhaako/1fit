@@ -16,4 +16,6 @@ public interface UserService {
     User saveUser(@Valid User user);
 
     Optional<User> findByUsername(String username);
+
+    User findUser(Long id);
 }

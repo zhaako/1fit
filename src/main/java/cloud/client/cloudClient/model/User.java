@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder(toBuilder = true)
-@Table(name = "Train_User")
+@Table(name = "Train_User", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

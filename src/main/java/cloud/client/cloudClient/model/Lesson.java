@@ -28,10 +28,4 @@ public class Lesson {
 
     @Column(name = "lessonPrice")
     private int lessonPrice;
-
-    @Column(name = "date")
-    private LocalDateTime date;
-
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<User> users;
 }

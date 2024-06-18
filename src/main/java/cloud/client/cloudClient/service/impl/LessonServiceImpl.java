@@ -55,6 +55,11 @@ public class LessonServiceImpl implements LessonService {
         return repository.save(lesson);
     }
 
+    @Override
+    public Lesson findLesson(Long id) {
+        return repository.findLessonById(id);
+    }
+
     private Set<Lesson> parseCsv(MultipartFile file) throws IOException {
         try(Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             HeaderColumnNameMappingStrategy<LessonCsv> strategy =

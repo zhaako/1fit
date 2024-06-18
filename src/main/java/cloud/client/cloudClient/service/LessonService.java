@@ -12,6 +12,7 @@ public interface LessonService {
     List<Lesson> getAllLesson();
     Lesson addLesson(Lesson lesson);
     void deleteLesson(Lesson lesson);
-
     Lesson saveLesson(Lesson lesson);
+
+    Lesson findLesson(Long id);
 }
