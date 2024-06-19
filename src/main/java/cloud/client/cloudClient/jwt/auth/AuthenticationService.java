@@ -2,7 +2,7 @@ package cloud.client.cloudClient.jwt.auth;
 
 
 import cloud.client.cloudClient.jwt.JwtService;
-import cloud.client.cloudClient.model.Role;
+import cloud.client.cloudClient.model.roles.Role;
 import cloud.client.cloudClient.model.User;
 import cloud.client.cloudClient.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class AuthenticationService {
                 .name(request.getName())
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.CLIENT)
+                .role(Role.USER)
                 .build();
         repository.saveUser(user);
         var jwtToken = jwtService.generateToken(user);

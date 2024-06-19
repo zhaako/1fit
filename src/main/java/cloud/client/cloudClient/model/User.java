@@ -1,9 +1,8 @@
 package cloud.client.cloudClient.model;
 
+import cloud.client.cloudClient.model.roles.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Past;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,7 +17,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder(toBuilder = true)
 @Table(name = "Train_User", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User implements UserDetails {

@@ -64,6 +64,7 @@ public class ScheduleController {
     public List<Schedule> getSchedulesByUserId(@PathVariable Long userId) {
         return scheduleService.getSchedulesByUserId(userId);
     }
+
     @PostMapping("/addLesson/{id}")
     public Schedule addLesson(@PathVariable Long id, @RequestBody Schedule schedule, @AuthenticationPrincipal User userDetails){
         Long userId = jwtService.extractId(jwtService.generateToken(userDetails));

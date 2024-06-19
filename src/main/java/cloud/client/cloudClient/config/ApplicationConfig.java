@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @RequiredArgsConstructor
 public class ApplicationConfig {
     private final UserService repository;
+
+
     @Bean
     public UserDetailsService userDetailsService(){
         return username -> repository.findByUsername(username)

@@ -1,6 +1,6 @@
 package cloud.client.cloudClient.jwt;
 
-import cloud.client.cloudClient.model.Role;
+import cloud.client.cloudClient.model.roles.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
