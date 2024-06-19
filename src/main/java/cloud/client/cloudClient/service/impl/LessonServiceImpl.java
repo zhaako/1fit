@@ -1,7 +1,11 @@
 package cloud.client.cloudClient.service.impl;
 
+import cloud.client.cloudClient.model.Coach;
 import cloud.client.cloudClient.model.Lesson;
 import cloud.client.cloudClient.model.LessonCsv;
+import cloud.client.cloudClient.model.dto.CoachDto;
+import cloud.client.cloudClient.model.dto.LessonDto;
+import cloud.client.cloudClient.model.dto.NewCoachDto;
 import cloud.client.cloudClient.repository.LessonRepository;
 import cloud.client.cloudClient.service.LessonService;
 import com.opencsv.bean.CsvToBean;
@@ -16,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -36,8 +41,24 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public List<Lesson> getAllLesson() {
-        return repository.findAll();
+    public List<LessonDto> getAllLesson() {
+        List<Lesson> lessons = repository.findAll();
+        List<LessonDto> lessonDtos = new ArrayList<>();
+        for(Lesson lesson : lessons){
+            LessonDto lessonDto = new LessonDto();
+            lessonDto.setLessonPrice(lesson.getLessonPrice());
+            lessonDto.setLessonName(lesson.getLessonName());
+
+            Coach coach = lesson.getCoach();
+            NewCoachDto newCoachDto = new NewCoachDto();
+            newCoachDto.setName(coach.getName());
+            newCoachDto.setUsername(coach.getUsername());
+            newCoachDto.setDescription(coach.getDescription());
+            newCoachDto.setPosition(coach.getPosition());
+            lessonDto.setNewCoachDto(newCoachDto);
+            lessonDtos.add(lessonDto);
+        }
+        return lessonDtos;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package cloud.client.cloudClient.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -28,4 +29,8 @@ public class Lesson {
 
     @Column(name = "lessonPrice")
     private int lessonPrice;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "coach_id")
+    private Coach coach;
 }

@@ -17,6 +17,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorColumn(name = "user_type")
 @Builder(toBuilder = true)
 @Table(name = "Train_User", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User implements UserDetails {

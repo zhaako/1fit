@@ -1,6 +1,7 @@
 package cloud.client.cloudClient.service;
 
 import cloud.client.cloudClient.model.Lesson;
+import cloud.client.cloudClient.model.dto.LessonDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -9,7 +10,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface LessonService {
     CompletableFuture<Void> uploadLesson(MultipartFile file) throws IOException;
-    List<Lesson> getAllLesson();
+    List<LessonDto> getAllLesson();
     Lesson addLesson(Lesson lesson);
     void deleteLesson(Lesson lesson);
     Lesson saveLesson(Lesson lesson);
