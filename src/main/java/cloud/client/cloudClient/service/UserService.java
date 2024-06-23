@@ -1,6 +1,7 @@
 package cloud.client.cloudClient.service;
 
 
+import cloud.client.cloudClient.model.Coach;
 import cloud.client.cloudClient.model.User;
 import jakarta.validation.Valid;
 
@@ -18,4 +19,6 @@ public interface UserService {
     Optional<User> findByUsername(String username);
 
     User findUser(Long id);
+
+
 }

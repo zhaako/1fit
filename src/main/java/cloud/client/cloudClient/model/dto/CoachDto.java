@@ -1,8 +1,11 @@
 package cloud.client.cloudClient.model.dto;
 
 
-import cloud.client.cloudClient.model.Lesson;
-import lombok.*;
+import cloud.client.cloudClient.model.roles.Role;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -12,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CoachDto extends UserDto{
     private String position;
-    private int description;
+    private String description;
     private List<NewLessonDto> lessons;
+    private Role role;
 }

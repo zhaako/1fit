@@ -1,11 +1,10 @@
 package cloud.client.cloudClient.service;
 
 import cloud.client.cloudClient.model.Coach;
-import cloud.client.cloudClient.model.User;
 import cloud.client.cloudClient.model.dto.CoachDto;
-import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CoachService {
     List<Coach> getAllCoach();
@@ -13,4 +12,6 @@ public interface CoachService {
     void deleteCoach(Coach coach);
     Coach saveCoach(Coach coach);
     List<CoachDto> getAllNeedCoach();
+    Optional<Coach> getCoachById(Long id);
+    Coach getCoach(Long id);
 }

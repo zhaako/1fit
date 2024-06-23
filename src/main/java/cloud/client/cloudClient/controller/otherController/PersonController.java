@@ -55,7 +55,8 @@ public class PersonController {
         String currentUsername = authentication.getName();
         String u = jwtService.extractUsername(jwtService.generateToken(userDetails));
         String v = jwtService.extractName(jwtService.generateToken(userDetails));
-        System.out.println(currentUsername + " " + u + " " + v);
+        Long id = jwtService.extractId(jwtService.generateToken(userDetails));
+        System.out.println(currentUsername + " " + u + " " + v + " " + id);
         return "Async task triggered!";
     }
 }

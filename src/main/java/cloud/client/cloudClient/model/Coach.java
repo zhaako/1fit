@@ -1,26 +1,19 @@
 package cloud.client.cloudClient.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
-@Getter
-@Setter
 @DiscriminatorValue("Coach")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Coach extends User {
-
     private String position;
-    private int description;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "lesson_id")
-    private List<Lesson> lessons;
+    private String description;
 }
-

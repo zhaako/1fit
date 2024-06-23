@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NewCoachDto extends UserDto{
     private String position;
-    private int description;
+    private String description;
 }

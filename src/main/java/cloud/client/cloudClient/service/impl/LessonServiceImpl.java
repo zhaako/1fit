@@ -6,6 +6,7 @@ import cloud.client.cloudClient.model.LessonCsv;
 import cloud.client.cloudClient.model.dto.CoachDto;
 import cloud.client.cloudClient.model.dto.LessonDto;
 import cloud.client.cloudClient.model.dto.NewCoachDto;
+import cloud.client.cloudClient.model.dto.NewLessonDto;
 import cloud.client.cloudClient.repository.LessonRepository;
 import cloud.client.cloudClient.service.LessonService;
 import com.opencsv.bean.CsvToBean;
@@ -50,12 +51,17 @@ public class LessonServiceImpl implements LessonService {
             lessonDto.setLessonName(lesson.getLessonName());
 
             Coach coach = lesson.getCoach();
-            NewCoachDto newCoachDto = new NewCoachDto();
-            newCoachDto.setName(coach.getName());
-            newCoachDto.setUsername(coach.getUsername());
-            newCoachDto.setDescription(coach.getDescription());
-            newCoachDto.setPosition(coach.getPosition());
-            lessonDto.setNewCoachDto(newCoachDto);
+            if (coach != null) {
+                NewCoachDto newCoachDto = new NewCoachDto();
+                newCoachDto.setName(coach.getName());
+                newCoachDto.setUsername(coach.getUsername());
+                newCoachDto.setDescription(coach.getDescription());
+                newCoachDto.setPosition(coach.getPosition());
+                lessonDto.setNewCoachDto(newCoachDto);
+            } else {
+                lessonDto.setNewCoachDto(null);
+            }
+
             lessonDtos.add(lessonDto);
         }
         return lessonDtos;
@@ -79,6 +85,11 @@ public class LessonServiceImpl implements LessonService {
     @Override
     public Lesson findLesson(Long id) {
         return repository.findLessonById(id);
+    }
+
+    @Override
+    public List<NewLessonDto> findLessonsById(Long id) {
+        return repository.findAllByCoachId(id);
     }
 
     private Set<Lesson> parseCsv(MultipartFile file) throws IOException {

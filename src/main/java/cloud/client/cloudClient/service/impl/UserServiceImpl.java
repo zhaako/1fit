@@ -1,6 +1,8 @@
 package cloud.client.cloudClient.service.impl;
 
+import cloud.client.cloudClient.model.Coach;
 import cloud.client.cloudClient.model.User;
+import cloud.client.cloudClient.repository.CoachRepository;
 import cloud.client.cloudClient.repository.UserRepository;
 import cloud.client.cloudClient.service.UserService;
 import jakarta.validation.Valid;

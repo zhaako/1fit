@@ -2,6 +2,7 @@ package cloud.client.cloudClient.service;
 
 import cloud.client.cloudClient.model.Lesson;
 import cloud.client.cloudClient.model.dto.LessonDto;
+import cloud.client.cloudClient.model.dto.NewLessonDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -16,4 +17,5 @@ public interface LessonService {
     Lesson saveLesson(Lesson lesson);
 
     Lesson findLesson(Long id);
+    List<NewLessonDto> findLessonsById(Long id);
 }

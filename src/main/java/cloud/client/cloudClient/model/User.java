@@ -4,8 +4,10 @@ import cloud.client.cloudClient.model.roles.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@DiscriminatorColumn(name = "user_type")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Builder(toBuilder = true)
 @Table(name = "Train_User", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 public class User implements UserDetails {
@@ -46,8 +47,6 @@ public class User implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
-
-
     @Override
     public String getPassword() {
         return password;

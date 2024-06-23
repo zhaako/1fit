@@ -25,4 +25,5 @@ public class ScheduleDto {
     private Time duration;
     private String username;
     private List<Lesson> lesson;
+
 }

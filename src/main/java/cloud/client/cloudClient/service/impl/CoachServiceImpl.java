@@ -1,22 +1,36 @@
 package cloud.client.cloudClient.service.impl;
 
+import cloud.client.cloudClient.jwt.JwtService;
 import cloud.client.cloudClient.model.Coach;
 import cloud.client.cloudClient.model.Lesson;
+import cloud.client.cloudClient.model.User;
 import cloud.client.cloudClient.model.dto.CoachDto;
 import cloud.client.cloudClient.model.dto.NewLessonDto;
 import cloud.client.cloudClient.repository.CoachRepository;
+import cloud.client.cloudClient.repository.UserRepository;
 import cloud.client.cloudClient.service.CoachService;
-import lombok.Setter;
+import cloud.client.cloudClient.service.LessonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CoachServiceImpl implements CoachService {
     @Autowired
     private CoachRepository coachRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private LessonService lessonService;
+
+    public CoachServiceImpl() {
+    }
+
     @Override
     public List<Coach> getAllCoach() {
         return coachRepository.findAll();
@@ -33,6 +47,7 @@ public class CoachServiceImpl implements CoachService {
     }
 
     @Override
+    @Transactional
     public Coach saveCoach(Coach coach) {
         return coachRepository.save(coach);
     }
@@ -47,17 +62,22 @@ public class CoachServiceImpl implements CoachService {
             coachDto.setPosition(coach.getPosition());
             coachDto.setDescription(coach.getDescription());
             coachDto.setUsername(coach.getUsername());
-
-            List<NewLessonDto> newlessonDtos = new ArrayList<>();
-            for(Lesson lesson : coach.getLessons()){
-                NewLessonDto newLessonDto = new NewLessonDto();
-                newLessonDto.setLessonName(lesson.getLessonName());
-                newLessonDto.setLessonPrice(lesson.getLessonPrice());
-                newlessonDtos.add(newLessonDto);
-            }
+            List<NewLessonDto> newlessonDtos = lessonService.findLessonsById(coach.getId());
             coachDto.setLessons(newlessonDtos);
             needCoachDto.add(coachDto);
         }
         return needCoachDto;
     }
+
+    @Override
+    public Optional<Coach> getCoachById(Long id) {
+        return coachRepository.findById(id);
+    }
+
+    @Override
+    public Coach getCoach(Long id) {
+        return coachRepository.findCoachById(id);
+    }
+
+
 }

@@ -5,17 +5,19 @@ import cloud.client.cloudClient.model.Abonement;
 import cloud.client.cloudClient.model.User;
 import cloud.client.cloudClient.model.VisitHistory;
 import cloud.client.cloudClient.model.roles.DurationAbonement;
+import cloud.client.cloudClient.model.roles.Role;
 import cloud.client.cloudClient.repository.AbonementRepository;
 import cloud.client.cloudClient.service.AbonementService;
 import cloud.client.cloudClient.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -36,30 +38,33 @@ public class AbonementController {
         return abonementService.createSubscription(userId, startDate, endDate);
     }
 
+    private static final Map<DurationAbonement, Integer> DURATION_MAP = new EnumMap<>(DurationAbonement.class);
+
+    static {
+        DURATION_MAP.put(DurationAbonement.oneMonth, 1);
+        DURATION_MAP.put(DurationAbonement.threeMonth, 3);
+        DURATION_MAP.put(DurationAbonement.sixMonth, 6);
+        DURATION_MAP.put(DurationAbonement.twelveMonth, 12);
+    }
     @PutMapping("/renew/{id}")
     public Abonement renewSubscription(@PathVariable Long id, @RequestBody Abonement abonement) {
         Optional<Abonement> optionalAbonement = abonementRepository.findById(id);
-        if (!optionalAbonement.isPresent()) {
+        if (optionalAbonement.isEmpty()) {
             throw new RuntimeException("Abonement not found with id: " + id);
         }
+
         Abonement ab = optionalAbonement.get();
         ab.setStartDate(LocalDateTime.now());
-        if(abonement.getAbonement().equals(DurationAbonement.oneMonth)){
-            ab.setEndDate(LocalDateTime.now().plusMonths(1));
-            ab.setAbonement(abonement.getAbonement());
+
+        DurationAbonement durationAbonement = abonement.getAbonement();
+        Integer duration = DURATION_MAP.get(durationAbonement);
+        if (duration != null) {
+            ab.setEndDate(LocalDateTime.now().plusMonths(duration));
+            ab.setAbonement(durationAbonement);
+        } else {
+            throw new IllegalArgumentException("Unsupported duration abonement: " + durationAbonement);
         }
-        else if(abonement.getAbonement().equals(DurationAbonement.threeMonth)){
-            ab.setEndDate(LocalDateTime.now().plusMonths(3));
-            ab.setAbonement(abonement.getAbonement());
-        }
-        else if(abonement.getAbonement().equals(DurationAbonement.sixMonth)){
-            ab.setEndDate(LocalDateTime.now().plusMonths(6));
-            ab.setAbonement(abonement.getAbonement());
-        }
-        else if(abonement.getAbonement().equals(DurationAbonement.twelveMonth)){
-            ab.setEndDate(LocalDateTime.now().plusMonths(12));
-            ab.setAbonement(abonement.getAbonement());
-        }
+
         return abonementService.renewSubscription(ab);
     }
 
@@ -74,11 +79,17 @@ public class AbonementController {
     }
 
     @PostMapping("/add")
-    public Abonement addAbonement(@RequestBody Abonement abonement, @AuthenticationPrincipal User userDetails){
+    public Object addAbonement(@RequestBody Abonement abonement, @AuthenticationPrincipal User userDetails){
         Long userId = jwtService.extractId(jwtService.generateToken(userDetails));
         User user = userService.findUser(userId);
-        abonement.setUser(user);
-        return abonementService.addAbonement(abonement);
+        if(userDetails.getRole()==Role.USER){
+            abonement.setUser(user);
+            abonement.setEndDate(abonement.getStartDate().plusMonths(1));
+            return abonementService.addAbonement(abonement);
+        }
+        else {
+            return "only User can get abonement";
+        }
     }
 
     @GetMapping("/users/{userId}/hasAbonement")
