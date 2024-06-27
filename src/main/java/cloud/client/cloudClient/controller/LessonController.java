@@ -3,11 +3,13 @@ package cloud.client.cloudClient.controller;
 import cloud.client.cloudClient.model.Coach;
 import cloud.client.cloudClient.model.Lesson;
 import cloud.client.cloudClient.model.User;
-import cloud.client.cloudClient.model.dto.LessonDto;
 import cloud.client.cloudClient.model.dto.NewLessonDto;
+import cloud.client.cloudClient.repository.LessonRepository;
 import cloud.client.cloudClient.service.CoachService;
 import cloud.client.cloudClient.service.LessonService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,16 +21,25 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
-@RequestMapping("/api/lesson")
+@RequestMapping(path = "/api/lesson")
+@RequiredArgsConstructor
 public class LessonController {
-    @Autowired
-    private LessonService lessonService;
-    @Autowired
-    private CoachService coachService;
+    private final LessonService lessonService;
+    private final LessonRepository repository;
+    private final CoachService coachService;
 
-    @GetMapping
-    public List<LessonDto> getAllLesson(){
-        return lessonService.getAllLesson();
+
+    @GetMapping("/{pageNumber}/{pageSize}")
+    public Page<Lesson> getAllLesson(@PathVariable int pageNumber, @PathVariable int pageSize){
+        return repository.findAll(PageRequest.of(pageNumber, pageSize));
+    }
+
+    @GetMapping("")
+    public List<Lesson> getAllLessonsPagination(
+            @RequestParam(required = false, defaultValue = "0") int page,
+            @RequestParam(required = false, defaultValue = "10") int size
+    ){
+        return lessonService.getAllLessonsByPagination(PageRequest.of(page, size));
     }
 
     @PostMapping("/add")
@@ -43,6 +54,9 @@ public class LessonController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateLesson(@PathVariable Long id, @RequestBody NewLessonDto newLessonDto){
         Lesson lesson = lessonService.findLesson(id);
+        if (lesson == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lesson not found");
+        }
         lesson.setLessonName(newLessonDto.getLessonName());
         lesson.setLessonPrice(newLessonDto.getLessonPrice());
         lessonService.saveLesson(lesson);
@@ -77,8 +91,6 @@ public class LessonController {
             ex.printStackTrace();
             return null;
         });
-
         return ResponseEntity.ok("Upload process initiated.");
     }
-
 }

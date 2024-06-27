@@ -1,7 +1,6 @@
 package cloud.client.cloudClient.model.dto;
 
 import cloud.client.cloudClient.model.Lesson;
-import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
@@ -25,5 +24,4 @@ public class ScheduleDto {
     private Time duration;
     private String username;
     private List<Lesson> lesson;
-
 }

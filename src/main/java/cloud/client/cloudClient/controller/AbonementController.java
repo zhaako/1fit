@@ -24,14 +24,14 @@ import java.util.Optional;
 @RequestMapping("/api/subscriptions")
 @RequiredArgsConstructor
 public class AbonementController {
-    @Autowired
-    private AbonementService abonementService;
-    @Autowired
-    private AbonementRepository abonementRepository;
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private UserService userService;
+
+    private final AbonementService abonementService;
+
+    private final AbonementRepository abonementRepository;
+
+    private final JwtService jwtService;
+
+    private final UserService userService;
 
     @PostMapping("/create")
     public Abonement createSubscription(@RequestParam Long userId, @RequestParam LocalDateTime startDate, @RequestParam LocalDateTime endDate) {

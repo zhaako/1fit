@@ -7,7 +7,6 @@ import cloud.client.cloudClient.model.dto.CoachDto;
 import cloud.client.cloudClient.model.roles.Role;
 import cloud.client.cloudClient.service.CoachService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,12 +21,10 @@ import java.util.Optional;
 @RequestMapping("/api/coach")
 @RequiredArgsConstructor
 public class CoachController {
-    @Autowired
-    private CoachService coachService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private JwtService jwtService;
+    private final CoachService coachService;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+
 
 
     @PutMapping("/{id}")
@@ -55,12 +52,8 @@ public class CoachController {
     }
 
 
-    @GetMapping
-    public List<Coach> getAllCoach(){
-        return coachService.getAllCoach();
-    }
 
-    @GetMapping("/Dto")
+    @GetMapping
     public List<CoachDto> getAllNeedCoach(){
         return coachService.getAllNeedCoach();
     }

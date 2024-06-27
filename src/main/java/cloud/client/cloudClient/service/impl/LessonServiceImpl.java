@@ -3,7 +3,6 @@ package cloud.client.cloudClient.service.impl;
 import cloud.client.cloudClient.model.Coach;
 import cloud.client.cloudClient.model.Lesson;
 import cloud.client.cloudClient.model.LessonCsv;
-import cloud.client.cloudClient.model.dto.CoachDto;
 import cloud.client.cloudClient.model.dto.LessonDto;
 import cloud.client.cloudClient.model.dto.NewCoachDto;
 import cloud.client.cloudClient.model.dto.NewLessonDto;
@@ -13,6 +12,8 @@ import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.opencsv.bean.HeaderColumnNameMappingStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,6 +43,12 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
+    public List<Lesson> getAllLessonsByPagination(PageRequest pageRequest) {
+        Page<Lesson> lessonPage =  repository.findAll(pageRequest);
+        return lessonPage.getContent();
+    }
+
+    @Override
     public List<LessonDto> getAllLesson() {
         List<Lesson> lessons = repository.findAll();
         List<LessonDto> lessonDtos = new ArrayList<>();
@@ -49,7 +56,6 @@ public class LessonServiceImpl implements LessonService {
             LessonDto lessonDto = new LessonDto();
             lessonDto.setLessonPrice(lesson.getLessonPrice());
             lessonDto.setLessonName(lesson.getLessonName());
-
             Coach coach = lesson.getCoach();
             if (coach != null) {
                 NewCoachDto newCoachDto = new NewCoachDto();

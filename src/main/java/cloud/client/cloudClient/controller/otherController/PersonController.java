@@ -6,6 +6,7 @@ import cloud.client.cloudClient.service.impl.AsyncService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -21,10 +22,13 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/api/persons")
 public class PersonController {
 
-    @Autowired
-    private AsyncService asyncService;
-    @Autowired
-    private JwtService jwtService;
+    private final AsyncService asyncService;
+    private final JwtService jwtService;
+
+    public PersonController(AsyncService asyncService, JwtService jwtService) {
+        this.asyncService = asyncService;
+        this.jwtService = jwtService;
+    }
 
     @PostMapping
     public ResponseEntity<String> valid(@Valid @RequestBody User user) {
